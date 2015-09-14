@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <com.zerokol.views.JoystickView
+        android:id="@+id/joystick_left"
+        android:layout_width="@dimen/size_150"
+        android:layout_height="@dimen/size_150"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="30dp" />
+
+    <com.zerokol.views.JoystickView
+        android:id="@+id/joystick_right"
+        android:layout_width="@dimen/size_150"
+        android:layout_height="@dimen/size_150"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="30dp"  />
+
+    <TextView
+        android:id="@+id/tvTitleRL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/size_50"
+        android:text="Left Right" />
+
+    <TextView
+        android:id="@+id/tvRL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvTitleRL"
+        android:layout_marginTop="@dimen/size_10" />
+    <TextView
+        android:id="@+id/tvTitleFB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvRL"
+        android:layout_marginTop="@dimen/size_10" 
+        android:text="Foreward Backward"/>
+    <TextView
+        android:id="@+id/tvFB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvTitleFB"
+        android:layout_marginTop="@dimen/size_10" />
+    <TextView
+        android:id="@+id/tvTitlePower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvFB"
+        android:layout_marginTop="@dimen/size_10" 
+        android:text="Power"/>
+    <TextView
+        android:id="@+id/tvPower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvTitlePower"
+        android:layout_marginTop="@dimen/size_10" />
+    <TextView
+        android:id="@+id/tvTitleRotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvPower"
+        android:layout_marginTop="@dimen/size_10" 
+        android:text="Rotate"/>
+    <TextView
+        android:id="@+id/tvRotate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tvTitleRotate"
+        android:layout_marginTop="@dimen/size_10" />
+    
+    
+
+</RelativeLayout>

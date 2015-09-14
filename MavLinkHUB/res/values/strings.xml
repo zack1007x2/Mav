@@ -15,8 +15,6 @@
 <!-- Fragments Msgs: Connectivity-->
     <string name="connectivity_txt_select_device">Select Device</string>    
     <string name="connectivity_txt_disconnected">Disconnected</string>
-    <string name="connectivity_txt_select_device">Select Device</string>    
-    <string name="connectivity_txt_disconnected">Disconnected</string>
 <!-- Fragments Msgs: RealtimeMavLink -->
     <string name="bufferEmpty">Buffer empty</string>
     <string name="log_sys_log_empty">System log empty</string>    
@@ -90,5 +88,14 @@
     <string name="txt_connection_type">Unknown type</string>    
     <string name="txt_connected">Connected</string>    
     <string name="txt_disconnected">Disconnected</string>
+    
+    
+     <string name="frag_js_setting_default_value_title">Default Value : </string>
+    <string name="frag_js_setting_default_value">1500</string>
+    <string name="frag_js_setting_define_title">Define : </string>
+    
+    <string name="frag_js_setting_define_content">Ch1: bend Left Right \nCh2: bend forward backward \nCh3: power \nCh4: Rotation</string>
+    <string name="frag_js_setting_left_title">Left : </string>
+    <string name="frag_js_setting_right_title">Right : </string>
             
 </resources>

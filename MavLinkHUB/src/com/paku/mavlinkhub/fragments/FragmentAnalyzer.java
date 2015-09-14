@@ -1,5 +1,9 @@
 package com.paku.mavlinkhub.fragments;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import com.paku.mavlinkhub.HUBGlobals;
@@ -12,6 +16,7 @@ import com.paku.mavlinkhub.queue.items.ItemMavLinkMsg;
 import com.paku.mavlinkhub.viewadapters.ViewAdapterAnalyzerList;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,7 +140,10 @@ public class FragmentAnalyzer extends HUBFragment implements IDataUpdateByteLog,
 
 		}
 		else {
-			Log.d(TAG, "Packet not catch Info  =>" + msgItem.toString());
+			Log.d(TAG, "Null message");
+		}
+		if (null != msgItem) {
+			writeToFile(msgItem.toString());
 		}
 
 		// scroll down on pref
@@ -147,6 +155,29 @@ public class FragmentAnalyzer extends HUBFragment implements IDataUpdateByteLog,
 		//
 		//			listViewAnalyzer.setSelection(listAdapterAnalyzer.getCount());
 		//		}
+
+	}
+
+	private void writeToFile(String data) {
+		try {
+			String path = Environment.getExternalStorageDirectory().getPath();
+
+			File folder = new File(path + "/mav_log/");
+			if (!folder.isDirectory()) {
+				Log.d("Zack", "Path = " + path + "/mav_log/");
+				folder.mkdir();
+			}
+			data += "\n\n";
+			File file = new File(path + "/mav_log/log.txt");
+			//location  boolean append
+			FileOutputStream fout = new FileOutputStream(file, true);
+			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fout);
+			outputStreamWriter.write(data);
+			outputStreamWriter.close();
+		}
+		catch (IOException e) {
+			Log.e(TAG, "File write failed: " + e.toString());
+		}
 
 	}
 }

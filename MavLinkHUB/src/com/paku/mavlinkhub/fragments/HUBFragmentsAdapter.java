@@ -36,6 +36,7 @@ public class HUBFragmentsAdapter extends FragmentStatePagerAdapter {
 		}
 
 		fragments.add(new ItemFragment(new FragmentSysLog(), parentActivity.getString(R.string.title_syslog).toUpperCase(Locale.getDefault()), true));
+		fragments.add(new ItemFragment(new FragmentJoystickControl(), "CONTROL", true));
 
 	}
 

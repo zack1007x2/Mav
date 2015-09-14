@@ -55,7 +55,7 @@ public class ThreadDistibutorSender extends Thread {
 					case FROM_GS:
 						if (hub.droneClient.isConnected()) {
 							if (hub.droneClient.writeBytes(tmpItem.getPacketBytes())) {
-								// Log.d(TAG, "droneClient: Packet sent.");
+								Log.d(TAG, "droneClient: Packet sent.");
 							}
 							else {
 								Log.d(TAG, "droneClient: Not connected.");
