@@ -156,7 +156,7 @@ public class FragmentJoystickControl extends HUBFragment {
 					ch1 = 1500;
 					ch2 = 1500;
 				}
-				mHandler.sendEmptyMessage(DIRECTION_PACKET);
+				if (tbRC.isChecked()) mHandler.sendEmptyMessage(DIRECTION_PACKET);
 			}
 
 			@Override
@@ -216,7 +216,7 @@ public class FragmentJoystickControl extends HUBFragment {
 					cur_lift = 1040;
 					cur_rotate = 1500;
 				}
-				mHandler.sendEmptyMessage(DIRECTION_PACKET);
+				if (tbRC.isChecked()) mHandler.sendEmptyMessage(DIRECTION_PACKET);
 			}
 
 			@Override
