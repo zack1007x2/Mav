@@ -10,12 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_margin="30dp" >
+        android:layout_margin="@dimen/size_20" >
 
-        <com.zerokol.views.JoystickView
+        <com.paku.mavlinkhub.view.CusJoystickView
             android:id="@+id/joystick_left"
-            android:layout_width="@dimen/size_230"
-            android:layout_height="@dimen/size_230"
+            android:layout_width="@dimen/size_220"
+            android:layout_height="@dimen/size_220"
             android:layout_below="@id/tvPower" />
 
         <TextView
@@ -40,12 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="30dp" >
+        android:layout_margin="@dimen/size_20" >
 
         <com.zerokol.views.JoystickView
             android:id="@+id/joystick_right"
-            android:layout_width="@dimen/size_250"
-            android:layout_height="@dimen/size_250"
+            android:layout_width="@dimen/size_220"
+            android:layout_height="@dimen/size_220"
             android:layout_below="@id/tvFB"
             android:layout_toRightOf="@id/tvRL" />
 
