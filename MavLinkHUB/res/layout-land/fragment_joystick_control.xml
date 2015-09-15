@@ -14,8 +14,8 @@
 
         <com.zerokol.views.JoystickView
             android:id="@+id/joystick_left"
-            android:layout_width="@dimen/size_200"
-            android:layout_height="@dimen/size_200"
+            android:layout_width="@dimen/size_230"
+            android:layout_height="@dimen/size_230"
             android:layout_below="@id/tvPower" />
 
         <TextView
@@ -44,8 +44,8 @@
 
         <com.zerokol.views.JoystickView
             android:id="@+id/joystick_right"
-            android:layout_width="@dimen/size_200"
-            android:layout_height="@dimen/size_200"
+            android:layout_width="@dimen/size_250"
+            android:layout_height="@dimen/size_250"
             android:layout_below="@id/tvFB"
             android:layout_toRightOf="@id/tvRL" />
 
@@ -65,12 +65,12 @@
             android:text="Left/\nRight" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/button1"
+    <ToggleButton
+        android:id="@+id/tbRC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/relativeLayout2"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:text="Button" />
+        android:layout_marginTop="@dimen/size_50" />
 
 </RelativeLayout>

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.MAVLink.Messages.MAVLinkPacket;
 import com.MAVLink.Messages.MAVLinkPayload;
@@ -31,6 +32,7 @@ public class FragmentJoystickControl extends HUBFragment {
 	private Thread defaultLoop;
 	private boolean keeploopong, isTouching_left, isTouching_right;
 	private TextView tvRL, tvFB, tvPower, tvRotate;
+	private ToggleButton tbRC;
 
 	private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -87,6 +89,7 @@ public class FragmentJoystickControl extends HUBFragment {
 		tvFB = (TextView) (rootView.findViewById(R.id.tvFB));
 		tvPower = (TextView) (rootView.findViewById(R.id.tvPower));
 		tvRotate = (TextView) (rootView.findViewById(R.id.tvRotate));
+		tbRC = (ToggleButton) (rootView.findViewById(R.id.tbRC));
 
 		joystick_left.setOnJoystickMoveListener(new OnJoystickMoveListener() {
 
@@ -98,35 +101,53 @@ public class FragmentJoystickControl extends HUBFragment {
 				}
 				switch (direction) {
 				case JoystickView.FRONT:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1040 + (Integer.valueOf(10 * power).shortValue()));
 					cur_rotate = 1500;
 					break;
 				case JoystickView.FRONT_RIGHT:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1040 + (Integer.valueOf(10 * power).shortValue()));
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.RIGHT:
-					cur_lift = 1500;
+					cur_lift = 1040;
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.RIGHT_BOTTOM:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					//					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					if (power > 25) {
+						cur_lift = 1000;
+					}
+					else {
+						cur_lift = 1040;
+					}
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.BOTTOM:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					//					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					if (power > 25) {
+						cur_lift = 1000;
+					}
+					else {
+						cur_lift = 1040;
+					}
 					cur_rotate = 1500;
 					break;
 				case JoystickView.BOTTOM_LEFT:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					//					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					if (power > 25) {
+						cur_lift = 1000;
+					}
+					else {
+						cur_lift = 1040;
+					}
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.LEFT:
-					cur_lift = 1500;
+					cur_lift = 1040;
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.LEFT_FRONT:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1040 + (Integer.valueOf(10 * power).shortValue()));
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				default:
@@ -150,6 +171,9 @@ public class FragmentJoystickControl extends HUBFragment {
 			@Override
 			public void onValueChanged(int angle, int power, int direction) {
 				isTouching_right = true;
+				if (power >= 99) {
+					power = 100;
+				}
 				switch (direction) {
 				case JoystickView.FRONT:
 					ch1 = 1500;
@@ -189,7 +213,7 @@ public class FragmentJoystickControl extends HUBFragment {
 				}
 
 				if (!isTouching_left) {
-					cur_lift = 1500;
+					cur_lift = 1040;
 					cur_rotate = 1500;
 				}
 				mHandler.sendEmptyMessage(DIRECTION_PACKET);
@@ -230,10 +254,10 @@ public class FragmentJoystickControl extends HUBFragment {
 					catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if (!isTouching_left && !isTouching_right) {
+					if (!isTouching_left && !isTouching_right && tbRC.isChecked()) {
 						ch1 = 1500;
 						ch2 = 1500;
-						cur_lift = 1500;
+						cur_lift = 1040;
 						cur_rotate = 1500;
 						mHandler.sendEmptyMessage(DEFAULT_PACKET);
 					}

@@ -81,7 +81,13 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/tvTitleRotate"
         android:layout_marginTop="@dimen/size_10" />
-    
-    
+
+    <ToggleButton
+        android:id="@+id/tbRC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvRotate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
 
 </RelativeLayout>
