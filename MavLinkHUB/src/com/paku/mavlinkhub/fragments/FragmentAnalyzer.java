@@ -122,19 +122,19 @@ public class FragmentAnalyzer extends HUBFragment implements IDataUpdateByteLog,
 	@Override
 	public void onQueueMsgItemReady(ItemMavLinkMsg msgItem) {
 
-		if (null != msgItem && msgItem.direction != MSG_SOURCE.FROM_DRONE && msgItem.msgId == 70) {
-			msgItem.setChannel();
-			boolean needadd = false;
-			for (int j = 0; j < current.length; j++) {
-				if (current[j] != msgItem.ch[j]) {
-					needadd = true;
-					break;
-				}
-			}
+		if (null != msgItem && msgItem.direction != MSG_SOURCE.FROM_DRONE) {
+			//			msgItem.setChannel();
+			//			boolean needadd = false;
+			//			for (int j = 0; j < current.length; j++) {
+			//				if (current[j] != msgItem.ch[j]) {
+			//					needadd = true;
+			//					break;
+			//				}
+			//			}
 
-			if (needadd) {
-				listAdapterAnalyzer.add(msgItem);
-			}
+			//			if (needadd) {
+			listAdapterAnalyzer.add(msgItem);
+			//			}
 			current = msgItem.ch.clone();
 			textViewNoData.setVisibility(View.GONE);
 

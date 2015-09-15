@@ -44,6 +44,8 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd.chan2_raw = ch2;
 				cmd.chan3_raw = cur_lift;
 				cmd.chan4_raw = cur_rotate;
+				cmd.target_component = -66;
+				cmd.target_system = 1;
 				Log.d("Zack", "前後 = " + cmd.chan2_raw + " 左右 = " + cmd.chan1_raw + " 升力 = " + cmd.chan3_raw + " 自轉 = " + cmd.chan4_raw);
 				ItemMavLinkMsg mav_msg = new ItemMavLinkMsg(cmd.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(mav_msg);
@@ -55,18 +57,18 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd_active.chan2_raw = ch2;
 				cmd_active.chan3_raw = cur_lift;
 				cmd_active.chan4_raw = cur_rotate;
+				cmd_active.target_component = -66;
+				cmd_active.target_system = 1;
 				Log.d("Zack", "前後 = " + cmd_active.chan2_raw + " 左右 = " + cmd_active.chan1_raw + " 升力 = " + cmd_active.chan3_raw + " 自轉 = " + cmd_active.chan4_raw);
 				ItemMavLinkMsg msg_active = new ItemMavLinkMsg(cmd_active.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(msg_active);
 				this.sendEmptyMessage(PRINT_PARAM);
-				isTouching_left = false;
-				isTouching_right = false;
 				break;
 			case PRINT_PARAM:
-				tvRL.setText(String.valueOf(ch1));
-				tvFB.setText(String.valueOf(ch2));
-				tvPower.setText(String.valueOf(cur_lift));
-				tvRotate.setText(String.valueOf(cur_rotate));
+				tvRL.setText("Roll\n" + String.valueOf(ch1));
+				tvFB.setText("Pitch\n" + String.valueOf(ch2));
+				tvPower.setText("Throttle\n" + String.valueOf(cur_lift));
+				tvRotate.setText("Yaw\n" + String.valueOf(cur_rotate));
 				break;
 
 			}
@@ -91,13 +93,16 @@ public class FragmentJoystickControl extends HUBFragment {
 			@Override
 			public void onValueChanged(int angle, int power, int direction) {
 				isTouching_left = true;
+				if (power >= 99) {
+					power = 100;
+				}
 				switch (direction) {
 				case JoystickView.FRONT:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = 1500;
 					break;
 				case JoystickView.FRONT_RIGHT:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.RIGHT:
@@ -105,15 +110,15 @@ public class FragmentJoystickControl extends HUBFragment {
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.RIGHT_BOTTOM:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.BOTTOM:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = 1500;
 					break;
 				case JoystickView.BOTTOM_LEFT:
-					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.LEFT:
@@ -121,12 +126,10 @@ public class FragmentJoystickControl extends HUBFragment {
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				case JoystickView.LEFT_FRONT:
-					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					break;
 				default:
-					cur_lift = 1000;
-					cur_rotate = 1500;
 				}
 				if (!isTouching_right) {
 					ch1 = 1500;
@@ -134,6 +137,12 @@ public class FragmentJoystickControl extends HUBFragment {
 				}
 				mHandler.sendEmptyMessage(DIRECTION_PACKET);
 			}
+
+			@Override
+			public void onNotTouch() {
+				isTouching_left = false;
+			}
+
 		}, JoystickView.DEFAULT_LOOP_INTERVAL);
 
 		joystick_right.setOnJoystickMoveListener(new OnJoystickMoveListener() {
@@ -185,6 +194,12 @@ public class FragmentJoystickControl extends HUBFragment {
 				}
 				mHandler.sendEmptyMessage(DIRECTION_PACKET);
 			}
+
+			@Override
+			public void onNotTouch() {
+				// TODO Auto-generated method stub
+				isTouching_right = false;
+			}
 		}, JoystickView.DEFAULT_LOOP_INTERVAL);
 
 		return rootView;
@@ -215,7 +230,7 @@ public class FragmentJoystickControl extends HUBFragment {
 					catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					if (!isTouching_right && !isTouching_right) {
+					if (!isTouching_left && !isTouching_right) {
 						ch1 = 1500;
 						ch2 = 1500;
 						cur_lift = 1500;

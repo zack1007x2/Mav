@@ -10,14 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_margin="30dp" >
 
         <com.zerokol.views.JoystickView
             android:id="@+id/joystick_left"
             android:layout_width="@dimen/size_200"
             android:layout_height="@dimen/size_200"
-            
             android:layout_below="@id/tvPower" />
 
         <TextView
@@ -26,18 +24,18 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="power" />
-        
         <TextView
             android:id="@+id/tvRotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/joystick_left"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/joystick_left"
             android:text="Rotate" />
-
+        
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/relativeLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -47,9 +45,9 @@
         <com.zerokol.views.JoystickView
             android:id="@+id/joystick_right"
             android:layout_width="@dimen/size_200"
-            android:layout_height="@dimen/size_200" 
-            android:layout_toRightOf="@id/tvRL"
-            android:layout_below="@id/tvFB"/>
+            android:layout_height="@dimen/size_200"
+            android:layout_below="@id/tvFB"
+            android:layout_toRightOf="@id/tvRL" />
 
         <TextView
             android:id="@+id/tvFB"
@@ -65,9 +63,14 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="Left/\nRight" />
-
     </RelativeLayout>
 
-    
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true"
+        android:text="Button" />
 
 </RelativeLayout>

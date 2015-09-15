@@ -70,14 +70,14 @@ public class ViewAdapterAnalyzerList extends ArrayAdapter<ItemMavLinkMsg> {
 
 		msgTxtItem.setMe(itemsArrayList.get(position), mavClasses);
 		ItemMavLinkMsg cur = itemsArrayList.get(position);
-		//		msgName.setText(msgTxtItem.msgName);
-		//		mainText.setText(msgTxtItem.mainTxt);
-		//		desc1.setText(msgTxtItem.desc_1);
-		//		desc2.setText(msgTxtItem.desc_2);
-		//		desc3.setText(msgTxtItem.desc_3);
-		//		desc4.setText(msgTxtItem.desc_4);
-		mainText.setText("Ch1 = " + cur.ch[0] + "     Ch2 = " + cur.ch[1] + "     Ch3 = " + cur.ch[2] + "     Ch4 = " + cur.ch[3] + "     Ch5 = " + cur.ch[4] + "     Ch6 = " + cur.ch[5]
-				+ "     Ch7 = " + cur.ch[6] + "     Ch8 = " + cur.ch[7] + "     Target System = " + cur.ch[8] + "     Component = " + cur.ch[9]);
+		msgName.setText(msgTxtItem.msgName);
+		mainText.setText(msgTxtItem.mainTxt);
+		desc1.setText(msgTxtItem.desc_1);
+		desc2.setText(msgTxtItem.desc_2);
+		desc3.setText(msgTxtItem.desc_3);
+		desc4.setText(msgTxtItem.desc_4);
+		//		mainText.setText("Ch1 = " + cur.ch[0] + "     Ch2 = " + cur.ch[1] + "     Ch3 = " + cur.ch[2] + "     Ch4 = " + cur.ch[3] + "     Ch5 = " + cur.ch[4] + "     Ch6 = " + cur.ch[5]
+		//				+ "     Ch7 = " + cur.ch[6] + "     Ch8 = " + cur.ch[7] + "     Target System = " + cur.ch[8] + "     Component = " + cur.ch[9]);
 
 		if (msgTxtItem.direction == MSG_SOURCE.FROM_GS) {
 			msgItemView.setBackgroundColor(hub.getResources().getColor(R.color.hubLight));
