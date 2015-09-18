@@ -10,17 +10,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.MAVLink.Messages.MAVLinkPacket;
 import com.MAVLink.Messages.MAVLinkPayload;
 import com.MAVLink.Messages.ardupilotmega.msg_rc_channels_override;
+import com.MAVLink.Messages.ardupilotmega.msg_set_mode;
 import com.paku.mavlinkhub.R;
+import com.paku.mavlinkhub.enums.DRONE_MODE;
 import com.paku.mavlinkhub.enums.MSG_SOURCE;
 import com.paku.mavlinkhub.queue.items.ItemMavLinkMsg;
 import com.paku.mavlinkhub.view.CusJoystickView;
-import com.zerokol.views.JoystickView;
+import com.paku.mavlinkhub.view.JoystickView;
 
 public class FragmentJoystickControl extends HUBFragment {
 
@@ -31,12 +39,14 @@ public class FragmentJoystickControl extends HUBFragment {
 	private static final int DIRECTION_PACKET = 2;
 	private static final int PRINT_PARAM = 3;
 	private static final int BOOM = 4;
+	private static final int MODE_CHANGE = 5;
 	private Thread defaultLoop;
 	private boolean keeploopong, isTouching_left, isTouching_right;
 	private TextView tvRL, tvFB, tvPower, tvRotate;
 	private ToggleButton tbRC;
-	private int boom;
-	private boolean startUp;
+	private Spinner spinnerMode;
+	private int boom, cur_mode;
+	private boolean startUp, isLock;
 
 	private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
@@ -85,11 +95,20 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd_start.target_component = -66;
 				cmd_start.target_system = 1;
 				Log.d("Zack", "前後 = " + cmd_start.chan2_raw + " 左右 = " + cmd_start.chan1_raw + " 升力 = " + cmd_start.chan3_raw + " 自轉 = " + cmd_start.chan4_raw);
-				ItemMavLinkMsg mav__start_up_msg = new ItemMavLinkMsg(cmd_start.pack(), MSG_SOURCE.FROM_GS, 1);
-				hub.queue.addHubQueueItem(mav__start_up_msg);
+				ItemMavLinkMsg mav_start_up_msg = new ItemMavLinkMsg(cmd_start.pack(), MSG_SOURCE.FROM_GS, 1);
+				hub.queue.addHubQueueItem(mav_start_up_msg);
 				this.sendEmptyMessage(PRINT_PARAM);
 				cur_lift = 1000;
 				startUp = false;
+				break;
+			case MODE_CHANGE:
+				msg_set_mode droneMode = new msg_set_mode();
+				droneMode.base_mode = 1;
+				droneMode.target_system = 1;
+				droneMode.custom_mode = cur_mode;
+				ItemMavLinkMsg mav_mode_msg = new ItemMavLinkMsg(droneMode.pack(), MSG_SOURCE.FROM_GS, 1);
+				hub.queue.addHubQueueItem(mav_mode_msg);
+				Log.d("Zack", "MODE_CHANGE");
 				break;
 			}
 		}
@@ -108,6 +127,43 @@ public class FragmentJoystickControl extends HUBFragment {
 		tvPower = (TextView) (rootView.findViewById(R.id.tvPower));
 		tvRotate = (TextView) (rootView.findViewById(R.id.tvRotate));
 		tbRC = (ToggleButton) (rootView.findViewById(R.id.tbRC));
+		spinnerMode = (Spinner) (rootView.findViewById(R.id.spinnerMode));
+		String[] modes = { "Stable", "Land", "Loiter", "Auto" };
+		ArrayAdapter<String> ModeItem = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, modes);
+		ModeItem.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerMode.setAdapter(ModeItem);
+
+		spinnerMode.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				switch (position) {
+				case 0:
+					cur_mode = DRONE_MODE.MODE_STABLE;
+					mHandler.sendEmptyMessage(MODE_CHANGE);
+					break;
+				case 1:
+					cur_mode = DRONE_MODE.MODE_LAND;
+					mHandler.sendEmptyMessage(MODE_CHANGE);
+					break;
+				case 2:
+					cur_mode = DRONE_MODE.MODE_LOITER;
+					mHandler.sendEmptyMessage(MODE_CHANGE);
+					break;
+				case 3:
+					cur_mode = DRONE_MODE.MODE_AUTO;
+					mHandler.sendEmptyMessage(MODE_CHANGE);
+					break;
+				}
+
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+
+		});
 
 		joystick_left.setOnJoystickMoveListener(new com.paku.mavlinkhub.view.CusJoystickView.OnJoystickMoveListener() {
 
@@ -134,6 +190,9 @@ public class FragmentJoystickControl extends HUBFragment {
 				case JoystickView.RIGHT_BOTTOM:
 					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
+					if (cur_lift == 1000 && cur_rotate == 2000) {
+						isLock = false;
+					}
 					break;
 				case JoystickView.BOTTOM:
 					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
@@ -142,6 +201,9 @@ public class FragmentJoystickControl extends HUBFragment {
 				case JoystickView.BOTTOM_LEFT:
 					cur_lift = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
 					cur_rotate = (short) (1500 - (Integer.valueOf(5 * power).shortValue()));
+					if (cur_lift == 1000 && cur_rotate == 1000) {
+						isLock = true;
+					}
 					break;
 				case JoystickView.LEFT:
 					cur_lift = 1500;
@@ -162,13 +224,12 @@ public class FragmentJoystickControl extends HUBFragment {
 
 			@Override
 			public void onNotTouch() {
-				Log.d("Zack", "isTouching_left = false;");
 				isTouching_left = false;
 			}
 
 		}, JoystickView.DEFAULT_LOOP_INTERVAL);
 
-		joystick_right.setOnJoystickMoveListener(new com.zerokol.views.JoystickView.OnJoystickMoveListener() {
+		joystick_right.setOnJoystickMoveListener(new com.paku.mavlinkhub.view.JoystickView.OnJoystickMoveListener() {
 
 			@Override
 			public void onValueChanged(int angle, int power, int direction) {
@@ -222,7 +283,6 @@ public class FragmentJoystickControl extends HUBFragment {
 
 			@Override
 			public void onNotTouch() {
-				Log.d("Zack", "isTouching_right = false;");
 				isTouching_right = false;
 			}
 		}, JoystickView.DEFAULT_LOOP_INTERVAL);
@@ -266,7 +326,6 @@ public class FragmentJoystickControl extends HUBFragment {
 							cur_lift = 1000;
 						}
 
-						Log.d("Zack", "cur_lift = " + cur_lift);
 						if (boom == 3 || boom == 5) {
 							cur_lift = 1050;
 							mHandler.sendEmptyMessage(BOOM);
@@ -275,7 +334,7 @@ public class FragmentJoystickControl extends HUBFragment {
 						else {
 							mHandler.sendEmptyMessage(DEFAULT_PACKET);
 						}
-						if (!(boom > 5)) {
+						if (isLock && !(boom > 5)) {
 							boom++;
 						}
 

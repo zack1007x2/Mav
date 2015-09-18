@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.zerokol.views.JoystickView
+    <com.paku.mavlinkhub.view.CusJoystickView
         android:id="@+id/joystick_left"
         android:layout_width="@dimen/size_150"
         android:layout_height="@dimen/size_150"
@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_margin="30dp" />
 
-    <com.zerokol.views.JoystickView
+    <com.paku.mavlinkhub.view.JoystickView
         android:id="@+id/joystick_right"
         android:layout_width="@dimen/size_150"
         android:layout_height="@dimen/size_150"
@@ -89,5 +89,13 @@
         android:layout_below="@+id/tvRotate"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerMode"
+        android:layout_width="@dimen/size_80"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tbRC"
+        android:layout_marginTop="19dp" />
 
 </RelativeLayout>

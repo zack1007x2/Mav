@@ -5,11 +5,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class CusJoystickView extends View implements Runnable {
+public class JoystickView extends View implements Runnable {
 	// Constants
 	private final double RAD = 57.2957795;
 	public final static long DEFAULT_LOOP_INTERVAL = 200; // 200 ms
@@ -39,16 +38,16 @@ public class CusJoystickView extends View implements Runnable {
 	private int lastAngle = 0;
 	private int lastPower = 0;
 
-	public CusJoystickView(Context context) {
+	public JoystickView(Context context) {
 		super(context);
 	}
 
-	public CusJoystickView(Context context, AttributeSet attrs) {
+	public JoystickView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		initJoystickView();
 	}
 
-	public CusJoystickView(Context context, AttributeSet attrs, int defaultStyle) {
+	public JoystickView(Context context, AttributeSet attrs, int defaultStyle) {
 		super(context, attrs, defaultStyle);
 		initJoystickView();
 	}
@@ -84,12 +83,10 @@ public class CusJoystickView extends View implements Runnable {
 		super.onSizeChanged(xNew, yNew, xOld, yOld);
 		// before measure, get the center of view
 		xPosition = (int) getWidth() / 2;
-		//		yPosition = (int) getWidth() / 2;
-
+		yPosition = (int) getWidth() / 2;
 		int d = Math.min(xNew, yNew);
 		buttonRadius = (int) (d / 2 * 0.25);
 		joystickRadius = (int) (d / 2 * 0.75);
-		yPosition = (int) getHeight() - buttonRadius;
 
 	}
 
@@ -113,8 +110,7 @@ public class CusJoystickView extends View implements Runnable {
 		if (specMode == MeasureSpec.UNSPECIFIED) {
 			// Return a default size of 200 if no bounds are specified.
 			result = 200;
-		}
-		else {
+		} else {
 			// As you want to fill the available space
 			// always return the full available bounds.
 			result = specSize;
@@ -127,15 +123,21 @@ public class CusJoystickView extends View implements Runnable {
 		// super.onDraw(canvas);
 		centerX = (getWidth()) / 2;
 		centerY = (getHeight()) / 2;
-		//		centerY=0;
+//		centerY=0;
 		// painting the main circle
-		canvas.drawCircle((int) centerX, (int) centerY, joystickRadius, mainCircle);
+		canvas.drawCircle((int) centerX, (int) centerY, joystickRadius,
+				mainCircle);
 		// painting the secondary circle
-		canvas.drawCircle((int) centerX, (int) centerY, joystickRadius / 2, secondaryCircle);
+		canvas.drawCircle((int) centerX, (int) centerY, joystickRadius / 2,
+				secondaryCircle);
 		// paint lines
-		canvas.drawLine((float) centerX, (float) centerY, (float) centerX, (float) (centerY - joystickRadius), verticalLine);
-		canvas.drawLine((float) (centerX - joystickRadius), (float) centerY, (float) (centerX + joystickRadius), (float) centerY, horizontalLine);
-		canvas.drawLine((float) centerX, (float) (centerY + joystickRadius), (float) centerX, (float) centerY, horizontalLine);
+		canvas.drawLine((float) centerX, (float) centerY, (float) centerX,
+				(float) (centerY - joystickRadius), verticalLine);
+		canvas.drawLine((float) (centerX - joystickRadius), (float) centerY,
+				(float) (centerX + joystickRadius), (float) centerY,
+				horizontalLine);
+		canvas.drawLine((float) centerX, (float) (centerY + joystickRadius),
+				(float) centerX, (float) centerY, horizontalLine);
 
 		// painting the move button
 		canvas.drawCircle(xPosition, yPosition, buttonRadius, button);
@@ -146,31 +148,33 @@ public class CusJoystickView extends View implements Runnable {
 		this.getParent().requestDisallowInterceptTouchEvent(true);
 		xPosition = (int) event.getX();
 		yPosition = (int) event.getY();
-		double abs = Math.sqrt((xPosition - centerX) * (xPosition - centerX) + (yPosition - centerY) * (yPosition - centerY));
+		double abs = Math.sqrt((xPosition - centerX) * (xPosition - centerX)
+				+ (yPosition - centerY) * (yPosition - centerY));
 		if (abs > joystickRadius) {
 			xPosition = (int) ((xPosition - centerX) * joystickRadius / abs + centerX);
 			yPosition = (int) ((yPosition - centerY) * joystickRadius / abs + centerY);
-			Log.d("Zacc", "yPosition = " + yPosition + "  centerY = " + centerY + "    abs = " + abs);
 		}
 		invalidate();
 		if (event.getAction() == MotionEvent.ACTION_UP) {
 			xPosition = (int) centerX;
-			//			yPosition = (int) centerY;
-
+			yPosition = (int) centerY;
 			thread.interrupt();
-			if (onJoystickMoveListener != null) {
+			if (onJoystickMoveListener != null){
 				onJoystickMoveListener.onValueChanged(getAngle(), getPower(), getDirection());
 				onJoystickMoveListener.onNotTouch();
 			}
-
+				
 		}
-		if (onJoystickMoveListener != null && event.getAction() == MotionEvent.ACTION_DOWN) {
+		if (onJoystickMoveListener != null
+				&& event.getAction() == MotionEvent.ACTION_DOWN) {
 			if (thread != null && thread.isAlive()) {
 				thread.interrupt();
 			}
 			thread = new Thread(this);
 			thread.start();
-			if (onJoystickMoveListener != null) onJoystickMoveListener.onValueChanged(getAngle(), getPower(), getDirection());
+			if (onJoystickMoveListener != null)
+				onJoystickMoveListener.onValueChanged(getAngle(), getPower(),
+						getDirection());
 		}
 		return true;
 	}
@@ -178,107 +182,77 @@ public class CusJoystickView extends View implements Runnable {
 	private int getAngle() {
 		if (xPosition > centerX) {
 			if (yPosition < centerY) {
-				return lastAngle = (int) (Math.atan((yPosition - centerY) / (xPosition - centerX)) * RAD + 90);
-			}
-			else if (yPosition > centerY) {
-				return lastAngle = (int) (Math.atan((yPosition - centerY) / (xPosition - centerX)) * RAD) + 90;
-			}
-			else {
+				return lastAngle = (int) (Math.atan((yPosition - centerY)
+						/ (xPosition - centerX))
+						* RAD + 90);
+			} else if (yPosition > centerY) {
+				return lastAngle = (int) (Math.atan((yPosition - centerY)
+						/ (xPosition - centerX)) * RAD) + 90;
+			} else {
 				return lastAngle = 90;
 			}
-		}
-		else if (xPosition < centerX) {
+		} else if (xPosition < centerX) {
 			if (yPosition < centerY) {
-				return lastAngle = (int) (Math.atan((yPosition - centerY) / (xPosition - centerX)) * RAD - 90);
-			}
-			else if (yPosition > centerY) {
-				return lastAngle = (int) (Math.atan((yPosition - centerY) / (xPosition - centerX)) * RAD) - 90;
-			}
-			else {
+				return lastAngle = (int) (Math.atan((yPosition - centerY)
+						/ (xPosition - centerX))
+						* RAD - 90);
+			} else if (yPosition > centerY) {
+				return lastAngle = (int) (Math.atan((yPosition - centerY)
+						/ (xPosition - centerX)) * RAD) - 90;
+			} else {
 				return lastAngle = -90;
 			}
-		}
-		else {
+		} else {
 			if (yPosition <= centerY) {
 				return lastAngle = 0;
-			}
-			else {
+			} else {
 				if (lastAngle < 0) {
 					return lastAngle = -180;
-				}
-				else {
+				} else {
 					return lastAngle = 180;
 				}
 			}
 		}
 	}
 
-	public int getPower() {
-		return (int) (100 * Math.sqrt((xPosition - centerX) * (xPosition - centerX) + (yPosition - centerY) * (yPosition - centerY)) / joystickRadius);
+	private int getPower() {
+		return (int) (100 * Math.sqrt((xPosition - centerX)
+				* (xPosition - centerX) + (yPosition - centerY)
+				* (yPosition - centerY)) / joystickRadius);
 	}
 
-	public int getDirection() {
-
-		int direction = 0;
-
-		double x_dir = centerX - xPosition;
-		double y_dir = centerY - yPosition;
-
-		if (x_dir > 0) {
-			if (y_dir > 0) {
-				//left top
-				direction = LEFT_FRONT;
-			}
-			else if (y_dir < 0) {
-				//left bottom
-				direction = BOTTOM_LEFT;
-			}
-			else {
-				//left
-				direction = LEFT;
-			}
+	private int getDirection() {
+		if (lastPower == 0 && lastAngle == 0) {
+			return 0;
 		}
-		else if (x_dir < 0) {
-			if (y_dir > 0) {
-				//right top
-				direction = FRONT_RIGHT;
-			}
-			else if (y_dir < 0) {
-				//right bottom
-				direction = RIGHT_BOTTOM;
-			}
-			else {
-				//right
-				direction = RIGHT;
-			}
-		}
-		else {
-			if (y_dir > 0) {
-				//top
-				direction = FRONT;
-			}
-			else if (y_dir < 0) {
-				//bottom
-				direction = BOTTOM;
+		int a = 0;
+		if (lastAngle <= 0) {
+			a = (lastAngle * -1) + 90;
+		} else if (lastAngle > 0) {
+			if (lastAngle <= 90) {
+				a = 90 - lastAngle;
+			} else {
+				a = 360 - (lastAngle - 90);
 			}
 		}
 
+		int direction = (int) (((a + 22) / 45) + 1);
+
+		if (direction > 8) {
+			direction = 1;
+		}
 		return direction;
 	}
 
-	public void setOnJoystickMoveListener(OnJoystickMoveListener listener, long repeatInterval) {
+	public void setOnJoystickMoveListener(OnJoystickMoveListener listener,
+			long repeatInterval) {
 		this.onJoystickMoveListener = listener;
 		this.loopInterval = repeatInterval;
 	}
 
 	public static interface OnJoystickMoveListener {
 		public void onValueChanged(int angle, int power, int direction);
-
 		public void onNotTouch();
-	}
-
-	public int getYPosition() {
-		return yPosition;
 	}
 
 	@Override
@@ -286,13 +260,14 @@ public class CusJoystickView extends View implements Runnable {
 		while (!Thread.interrupted()) {
 			post(new Runnable() {
 				public void run() {
-					if (onJoystickMoveListener != null) onJoystickMoveListener.onValueChanged(getAngle(), getPower(), getDirection());
+					if (onJoystickMoveListener != null)
+						onJoystickMoveListener.onValueChanged(getAngle(),
+								getPower(), getDirection());
 				}
 			});
 			try {
 				Thread.sleep(loopInterval);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				break;
 			}
 		}
