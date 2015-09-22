@@ -62,7 +62,7 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd.chan4_raw = cur_rotate;
 				cmd.target_component = -66;
 				cmd.target_system = 1;
-				Log.d("Zack", "前後 = " + cmd.chan2_raw + " 左右 = " + cmd.chan1_raw + " 升力 = " + cmd.chan3_raw + " 自轉 = " + cmd.chan4_raw);
+				//				Log.d("Zack", "前後 = " + cmd.chan2_raw + " 左右 = " + cmd.chan1_raw + " 升力 = " + cmd.chan3_raw + " 自轉 = " + cmd.chan4_raw);
 				ItemMavLinkMsg mav_msg = new ItemMavLinkMsg(cmd.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(mav_msg);
 				this.sendEmptyMessage(PRINT_PARAM);
@@ -75,7 +75,7 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd_active.chan4_raw = cur_rotate;
 				cmd_active.target_component = -66;
 				cmd_active.target_system = 1;
-				Log.d("Zack", "前後 = " + cmd_active.chan2_raw + " 左右 = " + cmd_active.chan1_raw + " 升力 = " + cmd_active.chan3_raw + " 自轉 = " + cmd_active.chan4_raw);
+				//				Log.d("Zack", "前後 = " + cmd_active.chan2_raw + " 左右 = " + cmd_active.chan1_raw + " 升力 = " + cmd_active.chan3_raw + " 自轉 = " + cmd_active.chan4_raw);
 				ItemMavLinkMsg msg_active = new ItemMavLinkMsg(cmd_active.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(msg_active);
 				this.sendEmptyMessage(PRINT_PARAM);
@@ -94,7 +94,7 @@ public class FragmentJoystickControl extends HUBFragment {
 				cmd_start.chan4_raw = cur_rotate;
 				cmd_start.target_component = -66;
 				cmd_start.target_system = 1;
-				Log.d("Zack", "前後 = " + cmd_start.chan2_raw + " 左右 = " + cmd_start.chan1_raw + " 升力 = " + cmd_start.chan3_raw + " 自轉 = " + cmd_start.chan4_raw);
+				//				Log.d("Zack", "前後 = " + cmd_start.chan2_raw + " 左右 = " + cmd_start.chan1_raw + " 升力 = " + cmd_start.chan3_raw + " 自轉 = " + cmd_start.chan4_raw);
 				ItemMavLinkMsg mav_start_up_msg = new ItemMavLinkMsg(cmd_start.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(mav_start_up_msg);
 				this.sendEmptyMessage(PRINT_PARAM);
@@ -108,7 +108,7 @@ public class FragmentJoystickControl extends HUBFragment {
 				droneMode.custom_mode = cur_mode;
 				ItemMavLinkMsg mav_mode_msg = new ItemMavLinkMsg(droneMode.pack(), MSG_SOURCE.FROM_GS, 1);
 				hub.queue.addHubQueueItem(mav_mode_msg);
-				Log.d("Zack", "MODE_CHANGE");
+				//				Log.d("Zack", "MODE_CHANGE");
 				break;
 			}
 		}
@@ -173,7 +173,6 @@ public class FragmentJoystickControl extends HUBFragment {
 				if (power >= 99) {
 					power = 100;
 				}
-				Log.d("Zack", "direction = " + direction);
 				switch (direction) {
 				case JoystickView.FRONT:
 					cur_lift = (short) (1500 + (Integer.valueOf(5 * power).shortValue()));
